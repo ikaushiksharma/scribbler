@@ -1,4 +1,5 @@
 import { disableCanvas, enableCanvas, hideControls, showControls, resetCanvas } from "./paint";
+import { disableChat } from "./chat";
 
 const board = document.getElementById("jsPBoard");
 const notifs = document.getElementById("jsNotifs");
@@ -26,6 +27,7 @@ export const handleGameStarted = () => {
 export const handleLeaderNotif = ({ word }) => {
   enableCanvas();
   showControls();
+  disableChat();
   notifs.innerText = `You are the leader, paint: ${word}`
 }
 export const handleGameEnded = () => {
@@ -34,3 +36,4 @@ export const handleGameEnded = () => {
   hideControls();
   resetCanvas();
 }
+export const handleGameStarting = () => setNotifs("Game will start soon");
