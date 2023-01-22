@@ -28,13 +28,14 @@
   position: absolute;
   bottom: 0px;
   left: 50px;
-  box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3),
-    0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+  box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
+    0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
   background-color: white;
   padding: 20px 50px;
   text-align: center;
   border-radius: 50px;
-  animation: notification 0.5s ease-out forwards, dissapear 0.5s ease-in forwards;
+  animation: notification 0.5s ease-out forwards,
+    dissapear 0.5s ease-in forwards;
   animation-delay: 0.5s, 2s;
   color: white;
 }

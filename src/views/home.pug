@@ -7,11 +7,37 @@ html(lang="en")
     title Guess Mine
   body 
     .loginBox
-      form#jsLogin 
+        form#jsLogin 
         input(placeholder="Whats your nickname", type="text")
     .gameContainer#jsGame
-      h1 You are logged in
-      div#jsNotifications
+      .main 
+        canvas
+        .color-options
+          input#color(type="color")
+          .color-option(style="background-color: #1abc9c", data-color="#1abc9c")
+          .color-option(style="background-color: #3498db", data-color="#3498db")
+          .color-option(style="background-color: #34495e", data-color="#34495e")
+          .color-option(style="background-color: #27ae60", data-color="#27ae60")
+          .color-option(style="background-color: #8e44ad", data-color="#8e44ad")
+          .color-option(style="background-color: #f1c40f", data-color="#f1c40f")
+          .color-option(style="background-color: #e74c3c", data-color="#e74c3c")
+          .color-option(style="background-color: #95a5a6", data-color="#95a5a6")
+          .color-option(style="background-color: #d35400", data-color="#d35400")
+          .color-option(style="background-color: #2ecc71", data-color="#2ecc71")
+          .color-option(style="background-color: #e67e22", data-color="#e67e22")
+        .btns
+          input#line-width(type="range", min="1", max="10", value="5", step="0.5")
+          button#mode-btn Fill
+          button#destroy-btn Destroy
+          button#eraser-btn Erase
+          label(for="file") Add Photo
+            input#file(type="file", accept="image/*")
+          //- input#text(type="text" placeholder="Write and then double click")
+          button#save Save Image
+      .chat
+        ul.chat__messages#jsMessages
+        form.chat__form#jsSendMsg
+          input(placeholder="Write a message", type="text")
     script.
       window.events = !{events}
     script(src="/socket.io/socket.io.js")

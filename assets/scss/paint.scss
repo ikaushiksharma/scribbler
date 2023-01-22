@@ -1,0 +1,65 @@
+.main {
+  margin-right: 40px;
+  canvas {
+    width: 700px;
+    height: 500px;
+    background-color: white;
+    border-radius: 10px;
+  }
+  .color-options,
+  .btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 5px solid white;
+    transition: transform ease-in-out 0.1s;
+  }
+  .color-option:hover {
+    transform: scale(1.1);
+  }
+  input#color {
+    padding: 2px;
+    background-color: #fff;
+  }
+  button,
+  label {
+    padding: 8px;
+    min-width: 64px;
+    min-height: 30px;
+    font-size: 12px;
+    text-align: center;
+    border: 0;
+    background-color: royalblue;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: opacity linear 0.1s;
+    cursor: pointer;
+  }
+  button:hover {
+    opacity: 0.85;
+  }
+  input#line-width {
+    box-shadow: none;
+    width: 240px;
+  }
+  input#file {
+    display: none;
+  }
+
+  input#text {
+    all: unset;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: 500;
+    background-color: #fff;
+  }
+}

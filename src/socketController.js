@@ -10,6 +10,10 @@ const socketController = (socket) => {
   socket.on(events.disconnect, () => {
     broadcast(events.disconnected, { nickname: socket.nickname })
   })
+  socket.on(events.sendMsg, ({message}) => {
+    // message를 받아서 모두에게 broadcast
+		broadcast(events.newMsg, { message, nickname: socket.nickname });
+  })
 }
 
 export default socketController;
