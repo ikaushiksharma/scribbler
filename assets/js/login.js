@@ -10,7 +10,7 @@ const nickname = localStorage.getItem(NICKNAME)
 
 const logIn = (nickname) => {
   const socket = io('/')
-  socket.emit(window.EventSource.setNickname, { nickname })
+  socket.emit(window.events.setNickname, { nickname })
   initSockets(socket)
 }
 
