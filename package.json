@@ -1,17 +1,12 @@
 {
   "name": "scribbler",
   "version": "1.0.0",
-  "description": "Realtime drawing game built with SocketIO, Gulp and NodeJS",
+  "description": "Realtime Drawing Game built with SocketIO, Gulp and Node.js",
   "main": "index.js",
-  "scripts": {
-    "start": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ikaushiksharma/scribbler.git"
+    "url": "git+https://github.com/ikausiksharma/scribbler.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -19,10 +14,33 @@
   },
   "homepage": "https://github.com/ikaushiksharma/scribbler#readme",
   "dependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/node": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "babelify": "^10.0.0",
+    "del": "^7.0.0",
     "express": "^4.18.2",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-bro": "^2.0.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-csso": "^4.0.1",
+    "gulp-sass": "^5.1.0",
     "morgan": "^1.10.0",
+    "node-fetch": "^2.6.1",
+    "node-sass": "^8.0.0",
     "nodemon": "^2.0.20",
     "pug": "^3.0.2",
-    "socket.io": "^4.5.4"
+    "socket.io": "^4.5.3",
+    "uglifyify": "^5.0.2"
+  },
+  "scripts": {
+    "dev:server": "nodemon --exec babel-node src/server --ignore assets/ --ignore src/static",
+    "dev:assets": "gulp"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.18.9",
+    "eslint-plugin-prettier": "^4.2.1",
+    "sass": "^1.56.1"
   }
 }

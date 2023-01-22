@@ -1,2 +1,12 @@
-# scribbler
-Realtime drawing game built with SocketIO, Gulp and NodeJS
+# Guess Mine
+
+Realtime Drawing Game built with SocketIO, Gulp and Node.js
+
+## To Do:
+
+- setup
+  - [x] Server
+  - [x] Pug
+  - [x] Static
+  - [x] ESLint
+  - [x] SocketIO
