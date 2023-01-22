@@ -1,108 +1,169 @@
-import { getSocket } from './sockets'
-const canvas = document.getElementById('jsCanvas')
-const ctx = canvas.getContext('2d')
-const colors = document.getElementsByClassName('jsColor')
-const mode = document.getElementById('jsMode')
-const INITIAL_COLOR = '#2c2c2c'
-const CANVAS_SIZE = 700
-canvas.width = CANVAS_SIZE
-canvas.height = CANVAS_SIZE
-ctx.fillStyle = 'white'
-ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
-ctx.strokeStyle = INITIAL_COLOR
-ctx.fillStyle = INITIAL_COLOR
-ctx.lineWidth = 2.5
-let painting = false
-let filling = false
+import { getSocket } from "./sockets";
 
-const stopPainting = () => {
-  painting = false
-}
+const saveBtn = document.getElementById("save");
+const textInput = document.getElementById("text");
+const fileInput = document.getElementById("file");
+const modeBtn = document.getElementById("mode-btn");
+const destroyBtn = document.getElementById("destroy-btn");
+const eraserBtn = document.getElementById("eraser-btn");
+const colorOptions = Array.from(document.getElementsByClassName("color-option"));
+const color = document.getElementById("color");
+const lineWidth = document.getElementById("line-width");
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
 
-const startPainting = () => {
-  painting = true
-}
+const CANVAS_WIDTH = 700;
+const CANVAS_HEIGHT = 500;
+
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
+ctx.lineWidth = lineWidth.value;
+ctx.lineCap = "round"
+let isPainting = false;
+let isFilling = false;
 
 const beginPath = (x, y) => {
-  ctx.beginPath()
-  ctx.moveTo(x, y)
+  ctx.beginPath();
+  ctx.moveTo(x, y);
 }
 
 const strokePath = (x, y, color = null) => {
-  let currentColor = ctx.strokeStyle
+  let currentColor = ctx.strokeStyle; 
   if (color !== null) {
-    ctx.strokeStyle = color
+    ctx.strokeStyle = color;
   }
-  ctx.lineTo(x, y)
-  ctx.stroke()
-  ctx.strokeStyle = currentColor
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.strokeStyle = currentColor;
 }
 
-const onMouseMove = (event) => {
-  const x = event.offsetX
-  const y = event.offsetY
-  if (!painting) {
-    beginPath(x, y)
-    getSocket().emit(window.events.beginPath, { x, y })
-  } else {
+function onMove(event) {
+  const x = event.offsetX;
+  const y = event.offsetY;
+  if(isPainting){
     strokePath(x, y)
-    getSocket().emit(window.events.strokePath, {
-      x,
-      y,
-      color: ctx.strokeStyle,
-    })
+    getSocket().emit(window.events.strokePath, {x, y, color: ctx.strokeStyle})
+    return;
   }
+  beginPath(x, y);
+  getSocket().emit(window.events.beginPath, {x, y})
 }
 
-const handleColorClick = (event) => {
-  const color = event.target.style.backgroundColor
-  ctx.strokeStyle = color
-  ctx.fillStyle = color
+function startPainting() {
+  isPainting = true;
 }
 
-const handleModeClick = () => {
-  if (filling === true) {
-    filling = false
-    mode.innerText = 'Fill'
+function cancelPainting() {
+  isPainting = false;
+}
+
+function onLineWidthChange(event) {
+  //console.log(event);
+  ctx.lineWidth = event.target.value;
+}
+
+function onColorChange(event) {
+  ctx.strokeStyle = event.target.value;
+  ctx.fillStyle = event.target.value;
+}
+
+function onColorClick(event){
+
+  const colorValue = event.target.dataset.color; 
+  ctx.strokeStyle = colorValue;
+  ctx.fillStyle = colorValue;
+  color.value = colorValue; 
+}
+
+function onModeClick(){
+  if(isFilling) {
+    isFilling = false;
+    modeBtn.innerText = "Fill";
   } else {
-    filling = true
-    mode.innerText = 'Paint'
+    isFilling = true;
+    modeBtn.innerText = "Draw";
   }
 }
 
-const fill = (color = null) => {
-  let currentColor = ctx.fillStyle
-  if (color !== null) {
-    ctx.fillStyle = color
+const fill = (color = null ) => {
+  let currentColor = ctx.fillStyle;
+  if(color !== null){
+    ctx.fillStyle = color;
   }
-  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   ctx.fillStyle = currentColor
 }
 
-const handleCanvasClick = () => {
-  if (filling) {
-    fill()
+function onCavasClick() {
+  if(isFilling){
+    fill();
     getSocket().emit(window.events.fill, { color: ctx.fillStyle })
   }
 }
 
-const handleCM = (event) => {
-  event.preventDefault()
+function onDestroyClick() {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
-if (canvas) {
-  canvas.addEventListener('mousemove', onMouseMove)
-  canvas.addEventListener('mousedown', startPainting)
-  canvas.addEventListener('mouseup', stopPainting)
-  canvas.addEventListener('mouseleave', stopPainting)
-  canvas.addEventListener('click', handleCanvasClick)
-  canvas.addEventListener('contextmenu', handleCM)
-}
-Array.from(colors).forEach((color) => color.addEventListener('click', handleColorClick))
-if (mode) {
-  mode.addEventListener('click', handleModeClick)
+function onEraserClick() {
+  ctx.strokeStyle = "white";
+  isFilling = false;
+  modeBtn.innerText = "Fill";
 }
 
-export const handleBeganPath = ({ x, y }) => beginPath(x, y)
-export const handleStrokedPath = ({ x, y, color }) => strokePath(x, y, color)
-export const handleFilled = ({ color }) => fill(color)
+function onFileChange(event) {
+  const file = event.target.files[0];
+  const url = URL.createObjectURL(file);
+  const image = new Image(); 
+  image.src = url;
+  image.onload = function() {
+    ctx.drawImage(image, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    fileInput.value = null;
+  }
+}
+
+function onDoubleClick(event) {
+  const text = textInput.value;
+
+  if (text !== "") {  
+    ctx.save(); 
+    
+    ctx.lineWidth = 1;
+    ctx.font = "48px serif"; 
+    ctx.fillText(text, event.offsetX, event.offsetY);
+    
+    ctx.restore();  
+  }
+}
+
+function onSaveClick() {
+  const url = canvas.toDataURL();
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "myDrawing.png";
+  a.click();
+}
+
+canvas.addEventListener("dblclick", onDoubleClick);
+canvas.addEventListener("mousemove", onMove);
+canvas.addEventListener("mousedown", startPainting);
+canvas.addEventListener("mouseup", cancelPainting);
+canvas.addEventListener("mouseleave", cancelPainting);
+canvas.addEventListener("click", onCavasClick);
+
+lineWidth.addEventListener('change', onLineWidthChange);
+color.addEventListener("change", onColorChange);
+
+colorOptions.forEach(color => color.addEventListener("click", onColorClick));
+
+modeBtn.addEventListener("click", onModeClick);
+destroyBtn.addEventListener("click", onDestroyClick);
+eraserBtn.addEventListener("click", onEraserClick);
+fileInput.addEventListener("change", onFileChange);
+saveBtn.addEventListener("click", onSaveClick);
+
+export const handleBeganPath = ({x, y}) => beginPath(x, y)
+export const handleStrokedPath = ({x, y, color}) => strokePath(x, y, color);
+export const handleFilled = ({color}) => fill(color);
