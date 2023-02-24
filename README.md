@@ -1,4 +1,4 @@
-# Guess Mine
+# Scribbler
 
 Realtime Drawing Game built with SocketIO, Gulp and Node.js
 
